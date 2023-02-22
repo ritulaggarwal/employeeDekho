@@ -1,12 +1,24 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Table, Button } from 'react-bootstrap'
+import axios from 'axios'
 
-const EmployeesScreen = ({ employees }) => {
+const EmployeesScreen = () => {
+
+    const [employees, setEmployees] = useState([])
+
+    useEffect(() => {
+        const fetchEmployees = async () => {
+            const { data } = await axios.get('/api/employees')
+            setEmployees(data)
+        }
+        fetchEmployees()
+    }, [])
+
+
     return (
         <>
             <h1>Employees List</h1>
-
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -17,7 +29,6 @@ const EmployeesScreen = ({ employees }) => {
                         <th>Email</th>
                         <th>Age</th>
                         <th>Manager</th>
-                        <th></th>
                     </tr>
                 </thead>
 
@@ -32,18 +43,13 @@ const EmployeesScreen = ({ employees }) => {
                             <td>{employee.email}</td>
                             <td>{employee.age}</td>
                             <td>{employee.manager}</td>
-
                         </tr>
 
                     ))}
 
                 </tbody>
 
-
             </Table>
-
-
-
         </>
     )
 }
