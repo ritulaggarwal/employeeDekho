@@ -1,20 +1,37 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { Table, Button } from 'react-bootstrap'
 import axios from 'axios'
+import { LinkContainer } from 'react-router-bootstrap'
 
 const EmployeesScreen = () => {
 
     const [employees, setEmployees] = useState([])
-
+    const fetchEmployees = async () => {
+        const { data } = await axios.get('/api/employees')
+        setEmployees(data)
+    }
     useEffect(() => {
-        const fetchEmployees = async () => {
-            const { data } = await axios.get('/api/employees')
-            setEmployees(data)
-        }
         fetchEmployees()
     }, [])
 
+    const deleteEmployee = async (id) => {
+        try {
+            await axios.delete(`/api/employees/${id}`)
+            toast.success("Employee deleted!")
+            fetchEmployees()
+        } catch (err) {
+            toast.error("Error occurred during deletion of employee.")
+            console.log(err)
+        }
+
+    }
+
+    const deleteHandler = (id) => {
+        if (window.confirm('Are you sure you want to delete the employee?')) {
+            deleteEmployee(id)
+        }
+    }
 
     return (
         <>
@@ -43,6 +60,23 @@ const EmployeesScreen = () => {
                             <td>{employee.email}</td>
                             <td>{employee.age}</td>
                             <td>{employee.manager}</td>
+                            <td>
+                                <LinkContainer to={`/employees/edit/${employee.empId}`}>
+                                    <Button
+                                        variant='info'
+                                        className='btn-sm'>
+                                        <i className="fa-solid fa-user-pen"></i>
+                                    </Button>
+                                </LinkContainer>
+                            </td>
+
+                            <td>
+                                <Button
+                                    variant='danger'
+                                    className='btn-sm'
+                                    onClick={() => deleteHandler(employee.empId)}>
+                                    <i className='fas fa-trash'></i>
+                                </Button></td>
                         </tr>
 
                     ))}

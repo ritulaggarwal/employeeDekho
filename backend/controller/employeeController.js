@@ -7,7 +7,6 @@ const getEmployees = asyncHandler((req, res) => {
             console.log(`Error occured while fetching employees: ${err}`)
             return
         }
-        console.log(data)
         res.send(data)
     })
 })
@@ -20,7 +19,6 @@ const getEmployeeWithId = asyncHandler((req, res) => {
             console.log(`Error occured while fetching employee with id ${id}: ${err}`)
             return
         }
-        console.log(data)
         res.send(data)
     })
 })
@@ -32,6 +30,7 @@ const createEmployee = asyncHandler((req, res) => {
     pool.query(createEmployeeQuery, [empId, name, age, salary, department, manager, position, email], (err, data) => {
         if (err) {
             console.log(`Error occured while adding employee with id ${empId} : ${err}`)
+            res.status(400)
             return
         }
         console.log(`Employee added in the database with id: ${empId}`)
