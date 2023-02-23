@@ -2,14 +2,22 @@ import asyncHandler from 'express-async-handler'
 import pool from '../config/db.js'
 
 const getEmployees = asyncHandler((req, res) => {
-    pool.query("SELECT * FROM EMPLOYEES", (err, data) => {
+    const keyword = req.query.keyword
+    const searchEmployeesQuery = req.query.keyword ?
+        "SELECT * FROM EMPLOYEES WHERE name LIKE '%" + keyword + "%'"
+        : "SELECT * FROM EMPLOYEES"
+
+    pool.query(searchEmployeesQuery, (err, data) => {
         if (err) {
             console.log(`Error occured while fetching employees: ${err}`)
             return
         }
         res.send(data)
     })
+
 })
+
+
 
 const getEmployeeWithId = asyncHandler((req, res) => {
     const { id } = req.params

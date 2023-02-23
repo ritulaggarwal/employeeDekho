@@ -3,17 +3,21 @@ import { toast } from 'react-toastify'
 import { Table, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { LinkContainer } from 'react-router-bootstrap'
+import { useParams } from 'react-router-dom'
 
 const EmployeesScreen = () => {
+    const params = useParams();
+
+    const keyword = params.keyword;
 
     const [employees, setEmployees] = useState([])
-    const fetchEmployees = async () => {
-        const { data } = await axios.get('/api/employees')
+    const fetchEmployees = async (keyword = ``) => {
+        const { data } = await axios.get(`/api/employees/?keyword=${keyword}`)
         setEmployees(data)
     }
     useEffect(() => {
-        fetchEmployees()
-    }, [])
+        fetchEmployees(keyword)
+    }, [keyword])
 
     const deleteEmployee = async (id) => {
         try {
