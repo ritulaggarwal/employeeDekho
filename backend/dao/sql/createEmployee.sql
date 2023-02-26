@@ -1,0 +1,1 @@
+INSERT INTO EMPLOYEES (empId,name,age,salary,department,manager,position,email) VALUES (?,?,?,?,?,?,?,?)

@@ -1,14 +1,21 @@
 import asyncHandler from 'express-async-handler'
-import pool from '../config/db.js'
+import pool from '../dao/config/db.js'
+import { employeeConstants } from '../constants/employeeConstants.js'
+import { fileConstants } from '../constants/fileConstants.js'
+import { readFile } from '../utils/fsUtil.js'
+import * as path from 'path'
+import { query } from '../dao/dataAccessor/employeeDB.js'
 
-const resultPerPage = 2
+const resultPerPage = employeeConstants.EMPLOYEES_PER_PAGE
 const getEmployees = asyncHandler((req, res) => {
     const keyword = req.query.keyword
+    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
+    const getAllEmployeesFilePath = path.join(prefixFilePath, 'fetchAllEmployees.sql').toString()
     const searchEmployeesQuery = req.query.keyword ?
         "SELECT * FROM EMPLOYEES WHERE name LIKE '%" + keyword + "%'"
-        : "SELECT * FROM EMPLOYEES"
+        : readFile(getAllEmployeesFilePath)
 
-    pool.query(searchEmployeesQuery, (err, data) => {
+    pool.query(searchEmployeesQuery, req.query.keyword ? [keyword] : [], (err, data) => {
         if (err) {
             console.log(`Error occured while fetching employees: ${err}`)
             return
@@ -37,8 +44,11 @@ const getEmployees = asyncHandler((req, res) => {
 
 const getEmployeeWithId = asyncHandler((req, res) => {
     const { id } = req.params
-    const getEmployeeWithIdQuery = "SELECT * FROM EMPLOYEES WHERE empId=?"
-    pool.query(getEmployeeWithIdQuery, id, (err, data) => {
+    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
+    const filePath = path.join(prefixFilePath, 'getEmployeeWithId.sql').toString()
+    const getEmployeeWithIdQuery = readFile(filePath)
+    //query(getEmployeeWithIdQuery, [id])
+    pool.query(getEmployeeWithIdQuery, [id], (err, data) => {
         if (err) {
             console.log(`Error occured while fetching employee with id ${id}: ${err}`)
             return
@@ -49,8 +59,9 @@ const getEmployeeWithId = asyncHandler((req, res) => {
 
 const createEmployee = asyncHandler((req, res) => {
     const { empId, name, age, salary, department, manager, position, email } = req.body
-    const createEmployeeQuery =
-        "INSERT INTO EMPLOYEES (empId,name,age,salary,department,manager,position,email) VALUES (?,?,?,?,?,?,?,?)"
+    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
+    const filePath = path.join(prefixFilePath, 'createEmployee.sql').toString()
+    const createEmployeeQuery = readFile(filePath)
     pool.query(createEmployeeQuery, [empId, name, age, salary, department, manager, position, email], (err, data) => {
         if (err) {
             console.log(`Error occured while adding employee with id ${empId} : ${err}`)
@@ -65,8 +76,9 @@ const createEmployee = asyncHandler((req, res) => {
 const updateEmployee = asyncHandler((req, res) => {
     const { id } = req.params
     const { name, age, salary, department, manager, position, email } = req.body
-    const updateEmployeeQuery =
-        "UPDATE EMPLOYEES SET name=?, age=?, salary=?, department=?, manager=?, position=?, email=? WHERE empId=?"
+    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
+    const filePath = path.join(prefixFilePath, 'updateEmployee.sql').toString()
+    const updateEmployeeQuery = readFile(filePath)
     pool.query(updateEmployeeQuery, [name, age, salary, department, manager, position, email, id], (err, data) => {
         if (err) {
             console.log(`Error occured while updating employee with id ${id} : ${err}`)
@@ -79,9 +91,10 @@ const updateEmployee = asyncHandler((req, res) => {
 
 const deleteEmployee = asyncHandler((req, res) => {
     const { id } = req.params
-    const deleteEmployeeQuery =
-        "DELETE FROM EMPLOYEES WHERE empId=?"
-    pool.query(deleteEmployeeQuery, id, (err, data) => {
+    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
+    const filePath = path.join(prefixFilePath, 'deleteEmployee.sql').toString()
+    const deleteEmployeeQuery = readFile(filePath)
+    pool.query(deleteEmployeeQuery, [id], (err, data) => {
         if (err) {
             console.log(`Error occured while deleting employee with id ${id} : ${err}`)
             return

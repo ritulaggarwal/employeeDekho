@@ -1,0 +1,1 @@
+UPDATE EMPLOYEES SET name=?, age=?, salary=?, department=?, manager=?, position=?, email=? WHERE empId=?
