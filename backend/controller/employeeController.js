@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import pool from '../config/db.js'
 
+const resultPerPage = 2
 const getEmployees = asyncHandler((req, res) => {
     const keyword = req.query.keyword
     const searchEmployeesQuery = req.query.keyword ?
@@ -12,11 +13,26 @@ const getEmployees = asyncHandler((req, res) => {
             console.log(`Error occured while fetching employees: ${err}`)
             return
         }
-        res.send(data)
+        const numberOfEmployees = data.length
+        const numberOfPages = Math.ceil(numberOfEmployees / resultPerPage)
+        let page = req.query.page ? Number(req.query.page) : 1
+        if (page > numberOfPages) {
+            res.redirect('/?page=' + encodeURIComponent(numberOfPages))
+        } else if (page < 1) {
+            res.redirect('/?page=' + encodeURIComponent('1'))
+        }
+        const startingLimit = (page - 1) * resultPerPage
+        const sql = `${searchEmployeesQuery} LIMIT ${startingLimit}, ${resultPerPage}`
+
+        pool.query(sql, (err, data) => {
+            if (err) {
+                console.log(err)
+                return
+            }
+            res.send({ data: data, numberOfPages })
+        })
     })
-
 })
-
 
 
 const getEmployeeWithId = asyncHandler((req, res) => {

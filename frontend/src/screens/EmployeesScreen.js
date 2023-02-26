@@ -4,20 +4,25 @@ import { Table, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useParams } from 'react-router-dom'
+import Paginate from '../components/Paginate'
 
 const EmployeesScreen = () => {
     const params = useParams();
-
     const keyword = params.keyword;
+    const currentPage = params.page
 
+    const [numberOfPages, setNumberOfPages] = useState('')
     const [employees, setEmployees] = useState([])
-    const fetchEmployees = async (keyword = ``) => {
-        const { data } = await axios.get(`/api/employees/?keyword=${keyword}`)
+    const fetchEmployees = async (keyword = ``, currentPage = ``) => {
+
+        const result = await axios.get(`/api/employees/?keyword=${keyword}&page=${currentPage}`)
+        const { data, numberOfPages } = result.data
+        setNumberOfPages(numberOfPages)
         setEmployees(data)
     }
     useEffect(() => {
-        fetchEmployees(keyword)
-    }, [keyword])
+        fetchEmployees(keyword, currentPage)
+    }, [keyword, currentPage, numberOfPages])
 
     const deleteEmployee = async (id) => {
         try {
@@ -84,10 +89,10 @@ const EmployeesScreen = () => {
                         </tr>
 
                     ))}
-
                 </tbody>
 
             </Table>
+            <Paginate numberOfPages={numberOfPages} page={currentPage} keyword={keyword ? keyword : ''} />
         </>
     )
 }

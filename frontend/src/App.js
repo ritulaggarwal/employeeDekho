@@ -24,6 +24,8 @@ const App = () => {
             <Route path='/employees/create' element={<AddEmployeeScreen />} />
             <Route path='/employees/edit/:id' element={<EditEmployeeScreen />} />
             <Route path='/search/:keyword' element={<EmployeesScreen />} exact />
+            <Route path='/page/:page' element={<EmployeesScreen />} exact />
+            <Route path='/search/:keyword/page/:page' element={<EmployeesScreen />} exact />
           </Routes>
         </Container>
       </main>

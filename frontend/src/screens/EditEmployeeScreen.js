@@ -55,7 +55,7 @@ const EditEmployeeScreen = () => {
 
     return (
         <FormContainer>
-            <h1>Add Employee</h1>
+            <h1>Update Employee Information</h1>
             <Form onSubmit={submitHandler}>
                 <Form.Group controlId='empId'>
                     <Form.Label>Employee Id</Form.Label>
