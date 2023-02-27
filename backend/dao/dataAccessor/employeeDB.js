@@ -1,16 +1,14 @@
 import pool from '../config/db.js'
-import { fileConstants } from '../../constants/fileConstants.js'
-import * as path from 'path'
 import { readFile } from '../../utils/fsUtil.js'
 import { employeeConstants } from '../../constants/employeeConstants.js'
 import { paginate } from '../../services/paginate.js'
+import { joinPath } from '../../utils/pathUtil.js'
 
 const resultPerPage = employeeConstants.EMPLOYEES_PER_PAGE
 
 const getEmployeeWithIdAccessor = ((req) => {
     const { id } = req.params
-    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
-    const filePath = path.join(prefixFilePath, 'getEmployeeWithId.sql').toString()
+    const filePath = joinPath('getEmployeeWithId.sql')
     const getEmployeeWithIdQuery = readFile(filePath)
     return new Promise((resolve, reject) => {
         pool.query(getEmployeeWithIdQuery, [id], (err, data) => {
@@ -25,8 +23,7 @@ const getEmployeeWithIdAccessor = ((req) => {
 
 const createEmployeeAccessor = ((req) => {
     const { empId, name, age, salary, department, manager, position, email } = req.body
-    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
-    const filePath = path.join(prefixFilePath, 'createEmployee.sql').toString()
+    const filePath = joinPath('createEmployee.sql')
     const createEmployeeQuery = readFile(filePath)
     return new Promise((resolve, reject) => {
         pool.query(createEmployeeQuery, [empId, name, age, salary, department, manager, position, email], (err, data) => {
@@ -42,8 +39,7 @@ const createEmployeeAccessor = ((req) => {
 const updateEmployeeAccessor = ((req) => {
     const { id } = req.params
     const { name, age, salary, department, manager, position, email } = req.body
-    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
-    const filePath = path.join(prefixFilePath, 'updateEmployee.sql').toString()
+    const filePath = joinPath('updateEmployee.sql')
     const updateEmployeeQuery = readFile(filePath)
     return new Promise((resolve, reject) => {
         pool.query(updateEmployeeQuery, [name, age, salary, department, manager, position, email, id], (err, data) => {
@@ -60,8 +56,7 @@ const updateEmployeeAccessor = ((req) => {
 
 const deleteEmployeeAccessor = ((req) => {
     const { id } = req.params
-    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
-    const filePath = path.join(prefixFilePath, 'deleteEmployee.sql').toString()
+    const filePath = joinPath('deleteEmployee.sql')
     const deleteEmployeeQuery = readFile(filePath)
     return new Promise((resolve, reject) => {
         pool.query(deleteEmployeeQuery, [id], (err, data) => {
@@ -78,8 +73,7 @@ const deleteEmployeeAccessor = ((req) => {
 
 const getEmployeesAccessor = ((req) => {
     const keyword = req.query.keyword
-    const prefixFilePath = fileConstants.FILE_PATH_PREFIX
-    const getAllEmployeesFilePath = path.join(prefixFilePath, 'fetchAllEmployees.sql').toString()
+    const getAllEmployeesFilePath = joinPath('fetchAllEmployees.sql')
     const searchEmployeesQuery = req.query.keyword ?
         "SELECT * FROM EMPLOYEES WHERE name LIKE '%" + keyword + "%'"
         : readFile(getAllEmployeesFilePath)
