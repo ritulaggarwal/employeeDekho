@@ -3,6 +3,7 @@ import { fileConstants } from '../../constants/fileConstants.js'
 import * as path from 'path'
 import { readFile } from '../../utils/fsUtil.js'
 import { employeeConstants } from '../../constants/employeeConstants.js'
+import { paginate } from '../../services/paginate.js'
 
 const resultPerPage = employeeConstants.EMPLOYEES_PER_PAGE
 
@@ -89,21 +90,13 @@ const getEmployeesAccessor = ((req) => {
                 console.log(`Error occured while fetching employees: ${err}`)
                 return reject(err)
             }
-            const numberOfEmployees = data.length
-            const numberOfPages = Math.ceil(numberOfEmployees / resultPerPage)
-            let page = req.query.page ? Number(req.query.page) : 1
-            if (page > numberOfPages) {
-                res.redirect('/?page=' + encodeURIComponent(numberOfPages))
-            } else if (page < 1) {
-                res.redirect('/?page=' + encodeURIComponent('1'))
-            }
-            const startingLimit = (page - 1) * resultPerPage
+            const startingLimit = paginate(req, data.length)
+            const numberOfPages = Math.ceil(data.length / resultPerPage)
             const sql = `${searchEmployeesQuery} LIMIT ${startingLimit}, ${resultPerPage}`
             const fetchedEmployees = () => {
                 return new Promise((resolve, reject) => {
                     pool.query(sql, (err, data) => {
                         if (err) {
-                            console.log("Error occurred in nested pool")
                             console.log(err)
                             return reject(err)
                         }
