@@ -113,13 +113,10 @@ const getEmployeesAccessor = ((req) => {
                 })
             }
             return resolve(fetchedEmployees())
-
-
         })
     })
 
 })
-
 
 export {
     getEmployeeWithIdAccessor, createEmployeeAccessor, getEmployeesAccessor,
