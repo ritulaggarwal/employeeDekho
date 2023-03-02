@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, Nav, Container } from 'react-bootstrap'
 import SearchBox from './SearchBox'
+import SortDropdown from './SortDropdown'
 
 
 const Header = () => {
@@ -22,6 +23,7 @@ const Header = () => {
                             <Route render={({ history }) => <SearchBox history={history} />} />
                         </Routes>
                         <SearchBox />
+                        <SortDropdown />
                         <Nav className='ms-auto'>
                             <LinkContainer to='/employees/create'>
                                 <Nav.Link>

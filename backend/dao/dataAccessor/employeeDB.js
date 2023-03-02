@@ -25,7 +25,7 @@ const createEmployeeAccessor = ((req) => {
     const { empId, name, age, salary, department, manager, position, email } = req.body
     const filePath = joinPath('createEmployee.sql')
     const createEmployeeQuery = readFile(filePath)
-    return new Promise((resolve, reject) => {
+    return new Pro3mise((resolve, reject) => {
         pool.query(createEmployeeQuery, [empId, name, age, salary, department, manager, position, email], (err, data) => {
             if (err) {
                 console.log(`Error occured while adding employee with id ${empId} : ${err}`)
@@ -72,10 +72,11 @@ const deleteEmployeeAccessor = ((req) => {
 })
 
 const getEmployeesAccessor = ((req) => {
-    const keyword = req.query.keyword
+    const keyword = req.query.keyword ? req.query.keyword : ''
+    const sortType = req.query.sort ? req.query.sort : 'empId'
     const getAllEmployeesFilePath = joinPath('fetchAllEmployees.sql')
-    const searchEmployeesQuery = req.query.keyword ?
-        "SELECT * FROM EMPLOYEES WHERE name LIKE '%" + keyword + "%'"
+    const searchEmployeesQuery = req.query.keyword || req.query.sort ?
+        "SELECT * FROM EMPLOYEES WHERE name LIKE '%" + keyword + "%' ORDER BY " + sortType + ""
         : readFile(getAllEmployeesFilePath)
 
     return new Promise((resolve, reject) => {

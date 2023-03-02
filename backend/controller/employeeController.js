@@ -66,4 +66,18 @@ const deleteEmployee = asyncHandler(async (req, res) => {
 
 })
 
-export { getEmployees, getEmployeeWithId, createEmployee, updateEmployee, deleteEmployee } 
+const filterEmployee = asyncHandler(async (req, res) => {
+    if (!req.params) {
+        throw new Error("Employee Id can not be null")
+    }
+    try {
+        const data = await deleteEmployeeAccessor(req)
+        console.log(data)
+        res.status(202).send(data)
+    } catch (err) {
+        throw new Error(`Error occurred while deleting Employee: ${err}`)
+    }
+
+})
+
+export { getEmployees, getEmployeeWithId, createEmployee, updateEmployee, deleteEmployee, filterEmployee } 

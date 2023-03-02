@@ -25,7 +25,13 @@ const App = () => {
             <Route path='/employees/edit/:id' element={<EditEmployeeScreen />} />
             <Route path='/search/:keyword' element={<EmployeesScreen />} exact />
             <Route path='/page/:page' element={<EmployeesScreen />} exact />
+            <Route path='/sort/:sort' element={<EmployeesScreen />} exact />
+            <Route path='/sort/:sort/page/:page' element={<EmployeesScreen />} exact />
+            <Route path='/page:page/sort/:sort' element={<EmployeesScreen />} exact />
+            <Route path='/search/:keyword/sort/:sort' element={<EmployeesScreen />} exact />
+            <Route path='/sort/:sort/search/:keyword' element={<EmployeesScreen />} exact />
             <Route path='/search/:keyword/page/:page' element={<EmployeesScreen />} exact />
+            <Route path='/search/:keyword/sort/:sort/page/:page' element={<EmployeesScreen />} exact />
           </Routes>
         </Container>
       </main>

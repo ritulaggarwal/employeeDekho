@@ -10,19 +10,23 @@ const EmployeesScreen = () => {
     const params = useParams();
     const keyword = params.keyword;
     const currentPage = params.page
+    const sortType = params.sort
 
     const [numberOfPages, setNumberOfPages] = useState('')
     const [employees, setEmployees] = useState([])
-    const fetchEmployees = async (keyword = ``, currentPage = ``) => {
-
-        const result = await axios.get(`/api/employees/?keyword=${keyword}&page=${currentPage}`)
+    const fetchEmployees = async (keyword = ``, currentPage = ``, sortType = ``) => {
+        console.log("Fetching employees")
+        console.log(sortType)
+        console.log(params)
+        const result = await axios.get(`/api/employees/?keyword=${keyword}&sort=${sortType}&page=${currentPage}`)
         const { data, numberOfPages } = result.data
         setNumberOfPages(numberOfPages)
         setEmployees(data)
     }
     useEffect(() => {
-        fetchEmployees(keyword, currentPage)
-    }, [keyword, currentPage, numberOfPages])
+        console.log("Calling fetch Employees from useEffect")
+        fetchEmployees(keyword, currentPage, sortType)
+    }, [keyword, currentPage, numberOfPages, sortType])
 
     const deleteEmployee = async (id) => {
         try {
@@ -41,6 +45,21 @@ const EmployeesScreen = () => {
             deleteEmployee(id)
         }
     }
+
+    const sortTypes = {
+        empId: {
+            class: 'sort-up',
+            fn: (a, b) => b.empId - a.empId
+        },
+        name: {
+            class: 'sort-down',
+            fn: (a, b) => a.name - b.name
+        },
+        default: {
+            class: 'sort',
+            fn: (a, b) => a
+        }
+    };
 
     return (
         <>
@@ -92,7 +111,8 @@ const EmployeesScreen = () => {
                 </tbody>
 
             </Table>
-            <Paginate numberOfPages={numberOfPages} page={currentPage} keyword={keyword ? keyword : ''} />
+            <Paginate numberOfPages={numberOfPages} page={currentPage} keyword={keyword ? keyword : ''}
+                sort={sortType ? sortType : ''} />
         </>
     )
 }
