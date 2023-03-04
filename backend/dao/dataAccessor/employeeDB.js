@@ -117,8 +117,8 @@ const getEmployeesAccessor = ((req) => {
     }
     const startAge = filterObject.startAge ? filterObject.startAge : '1'
     const endAge = filterObject.endAge ? filterObject.endAge : '100'
-    const searchEmployeesQuery = `SELECT * FROM EMPLOYEES WHERE (name LIKE '%${keyword}%' or email LIKE '%${keyword}%') AND department IN (${departmentQuery})
-    AND AGE BETWEEN ${startAge} AND ${endAge} ORDER BY ${sortType}`
+    const searchEmployeesQuery = `SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), '%Y') + 0 AS aged FROM EMPLOYEES WHERE (name LIKE '%${keyword}%' or email LIKE '%${keyword}%') AND department IN (${departmentQuery})
+    AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), '%Y') + 0 BETWEEN ${startAge} AND ${endAge} ORDER BY ${sortType}`
 
 
     console.log("Query")

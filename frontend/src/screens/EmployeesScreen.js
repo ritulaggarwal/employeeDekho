@@ -120,6 +120,7 @@ const EmployeesScreen = () => {
                             </Form>
 
                         </th>
+                        <th>Date of Birth</th>
                         <th>Manager</th>
                     </tr>
                 </thead>
@@ -132,7 +133,8 @@ const EmployeesScreen = () => {
                             <td>{employee.name}</td>
                             <td>{employee.department}</td>
                             <td>{employee.email}</td>
-                            <td>{employee.age}</td>
+                            <td>{employee.aged}</td>
+                            <td>{employee.date_of_birth}</td>
                             <td>{employee.manager}</td>
                             <td>
                                 <LinkContainer to={`/employees/edit/${employee.empId}`}>
