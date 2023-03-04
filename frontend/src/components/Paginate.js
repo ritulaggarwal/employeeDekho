@@ -6,8 +6,6 @@ const Paginate = ({ numberOfPages, page, keyword = '', sort = '' }) => {
   if (numberOfPages <= 1) return null;
   return (
     <Pagination className='justify-content-center my-3'>
-      {console.log("paginate")}
-      {console.log(sort)}
       {[...Array(numberOfPages).keys()].map((p) => (
         <LinkContainer key={p} to={
           keyword && sort

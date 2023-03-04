@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler'
-import { getEmployeeWithIdAccessor, createEmployeeAccessor, updateEmployeeAccessor, deleteEmployeeAccessor, getEmployeesAccessor } from '../dao/dataAccessor/employeeDB.js'
+import { getEmployeeWithIdAccessor, createEmployeeAccessor, updateEmployeeAccessor, deleteEmployeeAccessor, getEmployeesAccessor, filterEmployeeAccessor } from '../dao/dataAccessor/employeeDB.js'
 
 const getEmployees = asyncHandler(async (req, res) => {
     if (!req) {
@@ -7,7 +7,9 @@ const getEmployees = asyncHandler(async (req, res) => {
     }
     try {
         const data = await getEmployeesAccessor(req)
-        res.send(data)
+        console.log("Data in controller")
+        console.log(data)
+        res.status(200).send(data)
     } catch (err) {
         throw new Error(`Error occurred while fetching Employees: ${err}`)
     }
@@ -67,15 +69,14 @@ const deleteEmployee = asyncHandler(async (req, res) => {
 })
 
 const filterEmployee = asyncHandler(async (req, res) => {
-    if (!req.params) {
-        throw new Error("Employee Id can not be null")
+    if (!req.body) {
+        throw new Error("Request can not be empty")
     }
     try {
-        const data = await deleteEmployeeAccessor(req)
-        console.log(data)
-        res.status(202).send(data)
+        const data = await filterEmployeeAccessor(req)
+        res.send(data)
     } catch (err) {
-        throw new Error(`Error occurred while deleting Employee: ${err}`)
+        throw new Error(`Error occurred while filtering employees`)
     }
 
 })

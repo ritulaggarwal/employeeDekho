@@ -1,0 +1,96 @@
+[33mcommit d1a784872129218e891fa43e6a1ea097ba1fe0df[m[33m ([m[1;36mHEAD -> [m[1;32mtest[m[33m, [m[1;31morigin/test[m[33m)[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Thu Mar 2 23:27:34 2023 +0530
+
+    Implemented Sorting
+
+[33mcommit a57bbbdaf1ade618799bfab20f26c5220756a528[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Tue Feb 28 02:00:54 2023 +0530
+
+    Added try catch block in controller
+
+[33mcommit 663603bfd891d44792f8667d289e3d207ae20d14[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Tue Feb 28 01:54:41 2023 +0530
+
+    Added pathUtil
+
+[33mcommit 10bd6d0dc9584e7084665bfb6d08862ea3bb7ab4[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Tue Feb 28 01:43:37 2023 +0530
+
+    Restructured pagination logic
+
+[33mcommit 7120af96a8c71b7408c203619ef18711d0ec20dd[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Tue Feb 28 00:05:16 2023 +0530
+
+    Removed unused import
+
+[33mcommit 813dda97272b3566f14609a5b6b26cc61fc2913c[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Tue Feb 28 00:01:20 2023 +0530
+
+    Created data accessor layer
+
+[33mcommit d7ad27d3c609f27c47b32454fee0155820c2d1f9[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Mon Feb 27 00:43:18 2023 +0530
+
+    Reading sql queries from file
+
+[33mcommit 9d17a10abb1143a446d21392d47c4a32a57ed542[m
+Merge: 1f2fe0e 3a884b9
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Sun Feb 26 14:30:24 2023 +0530
+
+    Merge branch 'master' of https://github.com/ritulaggarwal/employeeDekho
+
+[33mcommit 1f2fe0e9bf3494ed151873e0f254faddd08c473c[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Sun Feb 26 14:29:08 2023 +0530
+
+    Added Pagination
+
+[33mcommit 3a884b9d8e40572bef8de7ef7820bd6b2c7965eb[m
+Author: ritulaggarwal <63044774+ritulaggarwal@users.noreply.github.com>
+Date:   Fri Feb 24 01:52:44 2023 +0530
+
+    Create README.md
+
+[33mcommit d989592e5a40a8e163a5a2756a09204e30548a5b[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Fri Feb 24 01:44:40 2023 +0530
+
+    Added Search box
+
+[33mcommit f64ea76fd3b95c04c90019b711f651e3a4e64310[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Thu Feb 23 21:53:15 2023 +0530
+
+    Integrated APIs with frontend
+
+[33mcommit 11db05774142caa4b59517380372cd471d0cc840[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Thu Feb 23 04:19:28 2023 +0530
+
+    Integrated MySql database and Implemented Get, Put, Post, Delete APIs on backend
+
+[33mcommit 5930c4e3496675a68eb1d430897c96d074a88fd6[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Wed Feb 22 13:26:46 2023 +0530
+
+    Fetching employees from express
+
+[33mcommit d5c79ae494bd61e96e7e954eb49a34d26dc909c1[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Wed Feb 22 01:42:56 2023 +0530
+
+    Added header, footer, HomeScreen and EmployeeScreen with dummy data.
+
+[33mcommit 8bf8303399a2a6412ef997de278c1a14c8f17e6b[m
+Author: Ritul Aggarwal <ritul.aggarwal2000@gmail.com>
+Date:   Tue Feb 21 20:41:37 2023 +0530
+
+    React setup

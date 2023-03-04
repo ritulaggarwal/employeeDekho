@@ -3,7 +3,7 @@ import { getEmployees, getEmployeeWithId, createEmployee, updateEmployee, delete
 
 const router = express.Router()
 
-router.get('/', getEmployees)
+router.post('/', getEmployees)
 
 router.get('/:id', getEmployeeWithId)
 router.post('/create', createEmployee)

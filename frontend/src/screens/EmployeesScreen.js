@@ -5,28 +5,50 @@ import axios from 'axios'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useParams } from 'react-router-dom'
 import Paginate from '../components/Paginate'
+import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { useMemo } from 'react'
+
 
 const EmployeesScreen = () => {
+    const optionsArray = [
+        { key: "Engineer", label: "Engineer" },
+        { key: "Operations", label: "Operations" },
+    ];
     const params = useParams();
     const keyword = params.keyword;
     const currentPage = params.page
     const sortType = params.sort
-
+    var filtering = false
+    const [departments, setDepartments] = useState([])
+    const filterObject = useMemo(() => {
+        return {
+            "department": departments
+        }
+    }, [departments])
     const [numberOfPages, setNumberOfPages] = useState('')
     const [employees, setEmployees] = useState([])
-    const fetchEmployees = async (keyword = ``, currentPage = ``, sortType = ``) => {
+    const fetchEmployees = async (keyword = ``, currentPage = ``, sortType = ``, filterObject = {}) => {
         console.log("Fetching employees")
-        console.log(sortType)
-        console.log(params)
-        const result = await axios.get(`/api/employees/?keyword=${keyword}&sort=${sortType}&page=${currentPage}`)
+        const result = await axios.post(`/api/employees/?keyword=${keyword}&sort=${sortType}&page=${currentPage}`, filterObject)
         const { data, numberOfPages } = result.data
         setNumberOfPages(numberOfPages)
         setEmployees(data)
     }
     useEffect(() => {
         console.log("Calling fetch Employees from useEffect")
-        fetchEmployees(keyword, currentPage, sortType)
-    }, [keyword, currentPage, numberOfPages, sortType])
+        fetchEmployees(keyword, currentPage, sortType, filterObject)
+    }, [keyword, currentPage, numberOfPages, sortType, filterObject])
+
+    const filterEmployees = async (selected) => {
+        filtering = true
+        filterObject.department = selected
+        console.log(filterObject)
+        /*  const result = await axios.post(`/api/employees/filter`, filterObject)
+          console.log("filtering Employees 2")
+          setEmployees(result.data)
+          console.log(employees)
+          setNumberOfPages(result.data.length / 2)*/
+    }
 
     const deleteEmployee = async (id) => {
         try {
@@ -46,21 +68,6 @@ const EmployeesScreen = () => {
         }
     }
 
-    const sortTypes = {
-        empId: {
-            class: 'sort-up',
-            fn: (a, b) => b.empId - a.empId
-        },
-        name: {
-            class: 'sort-down',
-            fn: (a, b) => a.name - b.name
-        },
-        default: {
-            class: 'sort',
-            fn: (a, b) => a
-        }
-    };
-
     return (
         <>
             <h1>Employees List</h1>
@@ -70,7 +77,14 @@ const EmployeesScreen = () => {
                         <th>Emp. Id</th>
                         <th>Name</th>
                         <th>Position</th>
-                        <th>Department</th>
+                        <th>Department
+                            <DropdownMultiselect handleOnChange={(selected) => {
+                                setDepartments(selected)
+                                filterEmployees(selected)
+
+                            }}
+                                options={optionsArray} name="dept" />
+                        </th>
                         <th>Email</th>
                         <th>Age</th>
                         <th>Manager</th>

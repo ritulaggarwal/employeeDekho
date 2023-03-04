@@ -25,10 +25,41 @@ const createEmployeeAccessor = ((req) => {
     const { empId, name, age, salary, department, manager, position, email } = req.body
     const filePath = joinPath('createEmployee.sql')
     const createEmployeeQuery = readFile(filePath)
-    return new Pro3mise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         pool.query(createEmployeeQuery, [empId, name, age, salary, department, manager, position, email], (err, data) => {
             if (err) {
                 console.log(`Error occured while adding employee with id ${empId} : ${err}`)
+                return reject(err)
+            }
+            return resolve(data)
+        })
+    })
+})
+
+const filterEmployeeAccessor = ((req) => {
+    console.log("Calling in accessor")
+    const filterObject = req.body
+    //  console.log(req)
+    console.log(filterObject)
+    console.log(filterObject.department)
+    const department = filterObject.department ? filterObject.department : ["Operations", "Engineer"]
+    let departmentQuery = `'${department[0]}'`
+    for (var i = 1; i < department.length; i++) {
+        departmentQuery = `${departmentQuery}, '${department[i]}'`
+    }
+    const startAge = filterObject.startAge ? filterObject.startAge : '1'
+    const endAge = filterObject.endAge ? filterObject.endAge : '100'
+    const filePath = joinPath('createEmployee.sql')
+    // const createEmployeeQuery = readFile(filePath)
+    const filterEmployeeQuery = `SELECT * FROM EMPLOYEES WHERE DEPARTMENT IN (${departmentQuery})
+    AND AGE BETWEEN ${startAge} AND ${endAge}`
+
+    console.log(filterEmployeeQuery)
+    return new Promise((resolve, reject) => {
+        pool.query(filterEmployeeQuery, (err, data) => {
+            if (err) {
+                console.log(`Error occured while filtering`)
+                console.log(err)
                 return reject(err)
             }
             return resolve(data)
@@ -72,12 +103,43 @@ const deleteEmployeeAccessor = ((req) => {
 })
 
 const getEmployeesAccessor = ((req) => {
+    console.log("IN ACCessor")
     const keyword = req.query.keyword ? req.query.keyword : ''
     const sortType = req.query.sort ? req.query.sort : 'empId'
     const getAllEmployeesFilePath = joinPath('fetchAllEmployees.sql')
-    const searchEmployeesQuery = req.query.keyword || req.query.sort ?
-        "SELECT * FROM EMPLOYEES WHERE name LIKE '%" + keyword + "%' ORDER BY " + sortType + ""
+
+
+    const filterObject = req.body
+    console.log(filterObject)
+    console.log(...filterObject.department)
+    console.log(filterObject.department.length)
+    const department = filterObject.department.length > 0 ? filterObject.department : ["Operations", "Engineer"]
+    let departmentQuery = `'${department[0]}'`
+    console.log()
+    for (var i = 1; i < department.length; i++) {
+        departmentQuery = `${departmentQuery}, '${department[i]}'`
+    }
+    const startAge = filterObject.startAge ? filterObject.startAge : '1'
+    const endAge = filterObject.endAge ? filterObject.endAge : '100'
+    const searchEmployeesQuery = `SELECT * FROM EMPLOYEES WHERE (name LIKE '%${keyword}%' or email LIKE '%${keyword}%') AND department IN (${departmentQuery})
+    AND AGE BETWEEN ${startAge} AND ${endAge} ORDER BY ${sortType}`
+
+
+    console.log("Query")
+    console.log(searchEmployeesQuery)
+
+
+
+
+
+
+    /*const searchEmployeesQuery = req.query.keyword || req.query.sort ?
+        "SELECT * FROM EMPLOYEES WHERE (name LIKE '%" + keyword + "%' or email LIKE '%" + keyword + "%') ORDER BY " + sortType + ""
         : readFile(getAllEmployeesFilePath)
+
+*/
+
+
 
     return new Promise((resolve, reject) => {
         pool.query(searchEmployeesQuery, req.query.keyword ? [keyword] : [], (err, data) => {
@@ -108,5 +170,5 @@ const getEmployeesAccessor = ((req) => {
 
 export {
     getEmployeeWithIdAccessor, createEmployeeAccessor, getEmployeesAccessor,
-    updateEmployeeAccessor, deleteEmployeeAccessor
+    updateEmployeeAccessor, deleteEmployeeAccessor, filterEmployeeAccessor
 }
