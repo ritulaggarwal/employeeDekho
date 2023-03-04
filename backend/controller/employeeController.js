@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler'
-import { getEmployeeWithIdAccessor, createEmployeeAccessor, updateEmployeeAccessor, deleteEmployeeAccessor, getEmployeesAccessor, filterEmployeeAccessor } from '../dao/dataAccessor/employeeDB.js'
+import { getEmployeeWithIdAccessor, createEmployeeAccessor, updateEmployeeAccessor, deleteEmployeeAccessor, getEmployeesAccessor, filterEmployeeAccessor, getCount } from '../dao/dataAccessor/employeeDB.js'
 
 const getEmployees = asyncHandler(async (req, res) => {
     if (!req) {
@@ -7,9 +7,37 @@ const getEmployees = asyncHandler(async (req, res) => {
     }
     try {
         const data = await getEmployeesAccessor(req)
-        console.log("Data in controller")
+        console.log("data in controller")
         console.log(data)
-        res.status(200).send(data)
+        const filterObject = req.body
+        var department = filterObject.department.length > 0 ? filterObject.department : ["Operations", "Engineer", "CEO"]
+        const countObject = {
+            "departments": [],
+            "age": ""
+        }
+
+        for (var i = 0; i < department.length; i++) {
+            const cnt = await getCount(department[i])
+            const obj = {
+
+            }
+            obj["name"] = department[i]
+            obj["value"] = cnt
+            //  obj[department[i]] = cnt
+            //console.log(department[i])
+            //console.log(cnt)
+            countObject.departments.push(obj)
+
+        }
+        console.log(countObject)
+        //console.log(obj)
+        // countObject.departments.push(obj)
+
+
+
+
+
+        res.status(200).send({ data: data, countObject: countObject })
     } catch (err) {
         throw new Error(`Error occurred while fetching Employees: ${err}`)
     }

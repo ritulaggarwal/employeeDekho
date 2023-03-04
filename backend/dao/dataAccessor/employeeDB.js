@@ -110,11 +110,44 @@ const getEmployeesAccessor = ((req) => {
 
 
     const filterObject = req.body
-    const department = filterObject.department.length > 0 ? filterObject.department : ["Operations", "Engineer"]
+    var department = filterObject.department.length > 0 ? filterObject.department : ["Operations", "Engineer", "CEO"]
+    const countObject = {
+        "departments": [],
+        "age": ""
+    }
     let departmentQuery = `'${department[0]}'`
+    let cntt = 0;
+    const sql = `SELECT COUNT(*) AS cnt FROM EMPLOYEES WHERE department = '${department[0]}'`
+    console.log(sql)
+    const datas = pool.query(sql, (err, data) => {
+        if (err) {
+            console.log("Error occur")
+            console.log(err)
+            return
+        }
+        console.log("Data length11")
+        console.log(data[0].cnt)
+
+        return data[0].cnt
+    })
+    // console.log(datas.rows[0][data])
+    console.log("printint cnt")
+    console.log(datas)
+    console.log(cntt)
+    var obj = {
+
+    }
+    obj[department[0]] = cntt
+    console.log("prnting obj")
+    console.log(obj)
+    //countObject.department.push({ departmentName: `${cnt}` })
     for (var i = 1; i < department.length; i++) {
+        // var cnt = getEmployeesCount(department[i])
+        // obj[department[i]] = cnt
         departmentQuery = `${departmentQuery}, '${department[i]}'`
     }
+    countObject.departments.push(obj)
+    console.log(countObject)
     const startAge = filterObject.startAge ? filterObject.startAge : '1'
     const endAge = filterObject.endAge ? filterObject.endAge : '100'
     const searchEmployeesQuery = `SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), '%Y') + 0 AS aged FROM EMPLOYEES WHERE (name LIKE '%${keyword}%' or email LIKE '%${keyword}%') AND department IN (${departmentQuery})
@@ -164,7 +197,38 @@ const getEmployeesAccessor = ((req) => {
 
 })
 
+const getCount = (dept) => {
+
+    const sql = `SELECT COUNT(*) AS cnt FROM EMPLOYEES WHERE department = '${dept}'`
+    return new Promise((resolve, reject) => {
+        pool.query(sql, (err, data) => {
+            if (err) {
+                console.log("Error occurred while selecting cnt")
+                return reject(err)
+            }
+            return resolve(data[0].cnt)
+        })
+    })
+
+
+}
+
+const getEmployeesCount = (department) => {
+    const sql = `SELECT COUNT(*) AS cnt FROM EMPLOYEES WHERE department = '${department}'`
+    pool.query(sql, (err, data) => {
+        if (err) {
+            console.log("Error occur")
+            console.log(err)
+            return
+        }
+        console.log("Data")
+        console.log(data[0].cnt)
+
+        return data
+    })
+}
+
 export {
     getEmployeeWithIdAccessor, createEmployeeAccessor, getEmployeesAccessor,
-    updateEmployeeAccessor, deleteEmployeeAccessor, filterEmployeeAccessor
+    updateEmployeeAccessor, deleteEmployeeAccessor, filterEmployeeAccessor, getCount
 }

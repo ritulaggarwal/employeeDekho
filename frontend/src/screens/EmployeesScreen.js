@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { Table, Button, Form } from 'react-bootstrap'
+import { Table, Button, Form, Tab } from 'react-bootstrap'
 import axios from 'axios'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useParams } from 'react-router-dom'
@@ -29,14 +29,26 @@ const EmployeesScreen = () => {
             "endAge": endAge
         }
     }, [departments])
+    var departmentCountAnswer = []
+    const [departmentCountAns, setDepartmentCountAns] = useState()
     const [numberOfPages, setNumberOfPages] = useState('')
     const [employees, setEmployees] = useState([])
     const fetchEmployees = async (keyword = ``, currentPage = ``, sortType = ``, filterObject = {}) => {
         console.log("Fetching employees")
         const result = await axios.post(`/api/employees/?keyword=${keyword}&sort=${sortType}&page=${currentPage}`, filterObject)
-        const { data, numberOfPages } = result.data
+        console.log(result)
+        const departmentCount = result.data.countObject.departments
+        console.log(departmentCount)
+        setDepartmentCountAns(departmentCount)
+        const { data, numberOfPages } = result.data.data
         setNumberOfPages(numberOfPages)
         setEmployees(data)
+        departmentCountAnswer = departmentCount
+        departmentCountAnswer.map((department, index) => {
+            console.log("Iterating map")
+            console.log(department.name)
+            console.log(department.value)
+        })
     }
     useEffect(() => {
         console.log("Calling fetch Employees from useEffect")
@@ -75,6 +87,22 @@ const EmployeesScreen = () => {
 
     return (
         <>
+            <Table>
+                <tbody>
+                    {departmentCountAnswer.map((department, index) => (
+
+                        <tr key={department.name}>
+                            <td>{department.name}</td>
+                            <td>{department.value}</td>
+
+                        </tr>
+
+                    ))}
+
+
+
+                </tbody>
+            </Table>
             <h1>Employees List</h1>
             <Table striped bordered hover>
                 <thead>
@@ -160,6 +188,7 @@ const EmployeesScreen = () => {
 
             </Table>
             <Paginate numberOfPages={numberOfPages} page={currentPage} keyword={keyword ? keyword : ''}
+
                 sort={sortType ? sortType : ''} />
         </>
     )
