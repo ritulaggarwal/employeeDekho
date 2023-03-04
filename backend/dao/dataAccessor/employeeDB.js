@@ -110,12 +110,8 @@ const getEmployeesAccessor = ((req) => {
 
 
     const filterObject = req.body
-    console.log(filterObject)
-    console.log(...filterObject.department)
-    console.log(filterObject.department.length)
     const department = filterObject.department.length > 0 ? filterObject.department : ["Operations", "Engineer"]
     let departmentQuery = `'${department[0]}'`
-    console.log()
     for (var i = 1; i < department.length; i++) {
         departmentQuery = `${departmentQuery}, '${department[i]}'`
     }

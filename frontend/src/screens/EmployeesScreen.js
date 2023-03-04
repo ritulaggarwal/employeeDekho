@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { Table, Button } from 'react-bootstrap'
+import { Table, Button, Form } from 'react-bootstrap'
 import axios from 'axios'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useParams } from 'react-router-dom'
@@ -18,11 +18,15 @@ const EmployeesScreen = () => {
     const keyword = params.keyword;
     const currentPage = params.page
     const sortType = params.sort
+    const [startAge, setStartAge] = useState('')
+    const [endAge, setEndAge] = useState('')
     var filtering = false
     const [departments, setDepartments] = useState([])
     const filterObject = useMemo(() => {
         return {
-            "department": departments
+            "department": departments,
+            "startAge": startAge,
+            "endAge": endAge
         }
     }, [departments])
     const [numberOfPages, setNumberOfPages] = useState('')
@@ -42,12 +46,13 @@ const EmployeesScreen = () => {
     const filterEmployees = async (selected) => {
         filtering = true
         filterObject.department = selected
-        console.log(filterObject)
-        /*  const result = await axios.post(`/api/employees/filter`, filterObject)
-          console.log("filtering Employees 2")
-          setEmployees(result.data)
-          console.log(employees)
-          setNumberOfPages(result.data.length / 2)*/
+
+    }
+    const submitHandler = (e) => {
+        e.preventDefault()
+        filterObject.startAge = startAge
+        filterObject.endAge = endAge
+        fetchEmployees(keyword, currentPage, sortType, filterObject)
     }
 
     const deleteEmployee = async (id) => {
@@ -76,7 +81,6 @@ const EmployeesScreen = () => {
                     <tr>
                         <th>Emp. Id</th>
                         <th>Name</th>
-                        <th>Position</th>
                         <th>Department
                             <DropdownMultiselect handleOnChange={(selected) => {
                                 setDepartments(selected)
@@ -86,7 +90,36 @@ const EmployeesScreen = () => {
                                 options={optionsArray} name="dept" />
                         </th>
                         <th>Email</th>
-                        <th>Age</th>
+                        <th>Age
+                            <Form onSubmit={submitHandler}>
+                                <Form.Group controlId='startAge'>
+                                    <Form.Label>Age From</Form.Label>
+                                    <Form.Control
+                                        type='startAge'
+                                        placeholder='Age from'
+                                        value={startAge}
+                                        onChange={(e) => setStartAge(e.target.value)}
+                                    ></Form.Control>
+                                </Form.Group>
+                                <Form.Group controlId='endAge'>
+                                    <Form.Label>To</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Age till'
+                                        value={endAge}
+                                        onChange={(e) => setEndAge(e.target.value)}
+                                    ></Form.Control>
+                                </Form.Group>
+
+
+
+
+                                <Button type='submit' variant='primary'>
+                                    Filter
+                                </Button>
+                            </Form>
+
+                        </th>
                         <th>Manager</th>
                     </tr>
                 </thead>
@@ -97,7 +130,6 @@ const EmployeesScreen = () => {
                         <tr key={employee.empId}>
                             <td>{employee.empId}</td>
                             <td>{employee.name}</td>
-                            <td>{employee.position}</td>
                             <td>{employee.department}</td>
                             <td>{employee.email}</td>
                             <td>{employee.age}</td>
